@@ -5,6 +5,15 @@
  * Повертаємо - Створений словник (Map).
  */
 function createDictionary(entries) {
+  let map = new Map(entries);
+
+  let map2 = new Map();
+  entries.forEach(element => {
+    let [key, value] = element;
+    map2.set(key, value)
+  });
+ 
+  return map2
   // Створення порожнього словника
   // Використання методу forEach для перебору масиву пар ключ-значення
   // Додавання пари ключ-значення до словника за допомогою методу set
@@ -37,6 +46,9 @@ console.log(
  * Повертає - Об'єкт, що містить ключі та значення з вхідного словника.
  */
 function convertMapToObject(map) {
+  let obj = {};
+  map.forEach((value, key) => obj[key] = value)
+  return obj
   // Перебираємо ключі та значення в словнику
   // Додаємо ключ та значення до об'єкту
   // Повертаємо отриманий об'єкт
@@ -62,6 +74,12 @@ console.log(convertMapToObject(someMap));
  * value - Нове значення, яке потрібно присвоїти ключу.
  */
 function setValue(dictionary, key, value) {
+  if (dictionary.has(key)) {
+    dictionary.set(key, value)
+  } else {
+    dictionary.set(key, value)
+  }
+  return dictionary
   // Перевірка, чи існує вже ключ у словнику
   // Якщо ключ вже існує, встановлюємо для нього нове значення в верхньому регістрі
   // Якщо ключ не існує, додаємо нову пару ключ-значення до словника де значення буде таким же як ключ
@@ -82,6 +100,18 @@ console.log(
     "новий банан"
   )
 );
+// Встановлення нового значення для ключа "banana"
+console.log(
+  setValue(
+    new Map([
+      ["apple", "яблуко"],
+      ["banana", "банан"],
+      ["orange", "апельсин"],
+    ]),
+    "kiwi",
+    "ківі"
+  )
+);
 // Виведе:
 // Map(3) {
 //   'apple' => 'яблуко',
@@ -97,6 +127,12 @@ console.log(
  * Повертаємо - true, якщо ключ був успішно видалений, або false, якщо ключ не знайдено.
  */
 function deleteKey(dictionary, key) {
+  if (dictionary.has(key)) {
+    dictionary.delete(key)
+    return true
+  } else {
+    return false
+  }
   // Перевірка, чи існує ключ у словнику
   // Якщо ключ існує, видаляємо його та відповідне значення
   // Якщо ключ не знайдено, повертаємо false
@@ -115,6 +151,16 @@ console.log(
     "banana"
   )
 ); // true
+console.log(
+  deleteKey(
+    new Map([
+      ["apple", "яблуко"],
+      ["banana", "банан"],
+      ["orange", "апельсин"],
+    ]),
+    "kiwi"
+  )
+); // false
 
 // Завдання: 5
 /**
@@ -124,6 +170,13 @@ console.log(
  * Повертаємо - Масив ключів, які починаються з заданої букви.
  */
 function getKeysStartingWith(dictionary, letter) {
+  let arr = [];
+  for (const [key, value] of dictionary) {
+    if (key[0] === letter) {
+      arr.push(key)
+    }
+  }
+  return arr
   // Оголошення порожнього масиву для збереження ключів
   // Перебір ключів словника за допомогою циклу for...of
   // Перевірка, чи ключ починається з заданої букви
@@ -157,6 +210,22 @@ console.log(
  * Повертаємо - Об'єкт, що містить змінений словник, кількість доданих та відхилених ключів.
  */
 function addKeyValuePairs(dictionary, entries) {
+  let added = 0;
+  let rejected = 0;
+  entries.forEach((value) => {
+    if (dictionary.has(value[0])) {
+      rejected++
+    } else {
+      let [newKey, newValue] = value;
+      dictionary.set(newKey, newValue)
+      added++
+    }
+  });
+  return {
+    dictionary: dictionary,
+    added: added,
+    rejected: rejected
+  }
   // Ведемо статистику доданих та відхилених ключів, для цього створемо змінні added та rejected з початковими значеннями 0
   // Використовуємо метод forEach для перебору масиву пар ключ-значення
   // Перевіряємо, чи словник вже містить такий ключ за допомогою методу has
@@ -195,6 +264,39 @@ console.log(
  * Повертаємо - Об'єкт, який містить масиви ключів, значень і пар ключ-значення.
  */
 function transformDictionary(dictionary) {
+  let entries = [];
+  let keys = [];
+  let values = [];
+  /**
+  Варіант 1
+  dictionary.forEach((value,key) => {
+    entries.push([key, value])
+    keys.push(key)
+    values.push(value);
+  });
+  Варіант 2
+  for (const [key, value] of dictionary) {
+    entries.push([key, value])
+    keys.push(key)
+    values.push(value);
+  }
+  */
+
+  for (const key of dictionary.keys()) {
+    keys.push(key)
+  }
+  for (const value of dictionary.values()) {
+    values.push(value);
+  }
+  for (const el of dictionary.entries()) {
+    entries.push(el)
+  }
+  
+  return {
+    keys: keys,
+    values: values,
+    entries: entries
+  }
   // Створюємо порожні масиви для ключів (змінна keys), значень (змінна values) і пар ключ-значення (змінна entries)
   // Використовуємо цикл for...of і метод keys для перебору ключів словника
   // Додаємо кожен ключ до масиву keys за допомогою методу push
